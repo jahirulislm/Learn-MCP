@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Context Protocol (MCP) Briefing</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            /* Dark background */
+            color: #e2e8f0;
+            /* Light text color */
+        }
+
+        .container {
+            max-width: 960px;
+        }
+
+        .section-title {
+            @apply text-3xl md:text-4xl font-bold text-teal-300 mb-6 border-b-2 border-teal-500 pb-2;
+        }
+
+        .subsection-title {
+            @apply text-2xl md:text-3xl font-semibold text-blue-300 mb-4 mt-8;
+        }
+
+        .heading-emphasis {
+            @apply text-xl md:text-2xl font-medium text-purple-300 mb-2 mt-6;
+        }
+
+        ul {
+            @apply list-disc pl-5 mb-4;
+        }
+
+        ul ul {
+            @apply list-circle pl-5;
+        }
+
+        li {
+            @apply mb-2;
+        }
+
+        p {
+            @apply mb-4 leading-relaxed;
+        }
+
+        code {
+            @apply bg-gray-800 text-green-300 p-2 rounded-md block whitespace-pre-wrap break-words;
+        }
+
+        .code-block-container {
+            @apply bg-gray-900 p-4 rounded-lg mb-4;
+        }
+
+        .code-label {
+            @apply text-sm font-semibold text-gray-400 mb-2;
+        }
+
+        table {
+            @apply w-full text-left table-auto border-collapse;
+        }
+
+        th,
+        td {
+            @apply px-4 py-2 border border-gray-700;
+        }
+
+        th {
+            @apply bg-gray-700 text-gray-200 font-semibold;
+        }
+
+        tbody tr:nth-child(even) {
+            @apply bg-gray-700;
+        }
+
+        tbody tr:hover {
+            @apply bg-gray-600;
+        }
+    </style>
+</head>
+
+<body class="p-4">
+    <div class="container mx-auto bg-gray-800 p-6 md:p-10 rounded-lg shadow-xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">Model Context Protocol (MCP) Briefing</h1>
+            <p class="text-lg text-gray-400">A comprehensive overview of MCP's architecture, communication, and
+                capabilities.</p>
+        </header>
+
+        <!-- Introduction Section -->
+        <section class="mb-10">
+            <p>
+                The Model Context Protocol (MCP) is built on a client-server architecture that facilitates structured
+                communication between AI models and external systems. This architecture is designed for modularity and
+                clear separation of responsibilities, enabling AI models to seamlessly connect with a growing array of
+                external tools and data sources.
+            </p>
+            <p>
+                The MCP architecture comprises three primary components, each with well-defined roles:
+            </p>
+        </section>
+
+        <!-- Components Section -->
+        <section class="mb-10">
+            <h2 class="section-title">MCP Architecture: Components</h2>
+
+            <div class="mb-6 p-4 bg-gray-700 rounded-lg">
+                <h3 class="heading-emphasis">Host:</h3>
+                <ul class="list-none pl-0">
+                    <li class="mb-2"><span class="font-semibold text-orange-300">&bull; This is the user-facing AI
+                            application</span> that end-users interact with directly.</li>
+                    <li class="mb-2"><span class="font-semibold text-orange-300">&bull; Examples include</span> AI chat
+                        applications like OpenAI ChatGPT or Anthropic’s Claude Desktop, AI-enhanced IDEs such as Cursor,
+                        or custom AI agents built with libraries like LangChain or smolagents.</li>
+                    <li class="mb-2"><span class="font-semibold text-orange-300">&bull; The Host’s responsibilities
+                            include:</span>
+                        <ul>
+                            <li>Managing user interactions and permissions.</li>
+                            <li>Initiating connections to MCP Servers via MCP Clients.</li>
+                            <li>Orchestrating the overall flow between user requests, Large Language Model (LLM)
+                                processing, and external tools.</li>
+                            <li>Rendering results back to users in a coherent format.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mb-6 p-4 bg-gray-700 rounded-lg">
+                <h3 class="heading-emphasis">Client:</h3>
+                <ul class="list-none pl-0">
+                    <li class="mb-2"><span class="font-semibold text-orange-300">&bull; The Client is a component within
+                            the Host application.</span></li>
+                    <li class="mb-2"><span class="font-semibold text-orange-300">&bull; It manages communication with a
+                            specific MCP Server.</span></li>
+                    <li class="mb-2"><span class="font-semibold text-orange-300">&bull; Key characteristics
+                            include:</span>
+                        <ul>
+                            <li>Each Client maintains a 1:1 connection with a single Server.</li>
+                            <li>It handles the protocol-level details of MCP communication.</li>
+                            <li>It acts as the intermediary between the Host’s logic and the external Server.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mb-6 p-4 bg-gray-700 rounded-lg">
+                <h3 class="heading-emphasis">Server:</h3>
+                <ul class="list-none pl-0">
+                    <li class="mb-2"><span class="font-semibold text-orange-300">&bull; The Server is an external
+                            program or service</span> that exposes capabilities to AI models via the MCP protocol.</li>
+                    <li class="mb-2"><span class="font-semibold text-orange-300">&bull; Servers:</span>
+                        <ul>
+                            <li>Provide access to specific external tools, data sources, or services.</li>
+                            <li>Act as lightweight wrappers around existing functionality.</li>
+                            <li>Can run locally (on the same machine as the Host) or remotely (over a network).</li>
+                            <li>Expose their capabilities in a standardized format that Clients can discover and use.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Communication Flow Section -->
+        <section class="mb-10">
+            <h2 class="section-title">Communication Flow</h2>
+            <p>A typical MCP workflow involves several steps:</p>
+            <ol class="list-decimal pl-5 mb-4">
+                <li><span class="font-semibold text-teal-200">User Interaction:</span> The user interacts with the Host
+                    application, expressing an intent or query.</li>
+                <li><span class="font-semibold text-teal-200">Host Processing:</span> The Host processes the user’s
+                    input, potentially using an LLM to understand the request and determine what external capabilities
+                    might be needed.</li>
+                <li><span class="font-semibold text-teal-200">Client Connection:</span> The Host directs its Client
+                    component to connect to the appropriate Server(s).</li>
+                <li><span class="font-semibold text-teal-200">Capability Discovery:</span> The Client queries the Server
+                    to discover what capabilities (Tools, Resources, Prompts) it offers.</li>
+                <li><span class="font-semibold text-teal-200">Capability Invocation:</span> Based on the user’s needs or
+                    the LLM’s determination, the Host instructs the Client to invoke specific capabilities from the
+                    Server.</li>
+                <li><span class="font-semibold text-teal-200">Server Execution:</span> The Server executes the requested
+                    functionality and returns results to the Client.</li>
+                <li><span class="font-semibold text-teal-200">Result Integration:</span> The Client relays these results
+                    back to the Host, which incorporates them into the context for the LLM or presents them directly to
+                    the user.</li>
+            </ol>
+        </section>
+
+        <!-- Key Advantages and Principles Section -->
+        <section class="mb-10">
+            <h2 class="section-title">Key Advantages and Principles of the Architecture</h2>
+            <ul>
+                <li><span class="font-semibold text-purple-300">Modularity:</span> A significant advantage of this
+                    architecture is its modularity. A single Host can connect to multiple Servers simultaneously via
+                    different Clients. New Servers can be added without requiring changes to existing Hosts, and
+                    capabilities can be easily composed across different Servers. This modularity transforms the
+                    traditional M×N integration problem (M AI applications connecting to N tools/services) into a more
+                    manageable M+N problem, where each Host and Server only needs to implement the MCP standard once.
+                </li>
+                <li><span class="font-semibold text-purple-300">Standardization:</span> The power of this architecture
+                    lies in the standardisation of the communication protocol and the clear separation of
+                    responsibilities. MCP defines a standardized communication protocol using JSON-RPC 2.0 as the
+                    message format for all communication between Clients and Servers, ensuring interoperability.</li>
+                <li><span class="font-semibold text-purple-300">Clear Separation of Responsibilities:</span> This design
+                    allows for a cohesive ecosystem where AI models can seamlessly connect with a diverse range of
+                    external tools and data sources.</li>
+                <li><span class="font-semibold text-purple-300">Underlying Principles:</span> The design of MCP is
+                    guided by principles such as standardization, simplicity, safety (requiring explicit user approval
+                    for sensitive operations), discoverability (dynamic discovery of capabilities), extensibility
+                    (supporting evolution through versioning and capability negotiation), and interoperability.</li>
+            </ul>
+            <p>
+                The architecture also specifies how messages are transported between Clients and Servers, supporting two
+                primary transport mechanisms: stdio for local communication and HTTP + SSE (Server-Sent Events) for
+                remote communication. Furthermore, the MCP protocol defines a structured interaction lifecycle between
+                Clients and Servers, including Initialization, Discovery, Execution, and Termination phases. Servers
+                expose various capabilities—such as Tools, Resources, Prompts, and Sampling—which are integral to how
+                the components interact and enable complex workflows.
+            </p>
+        </section>
+
+        <!-- Discuss Communication Protocol Section -->
+        <section class="mb-10">
+            <h2 class="section-title">Discuss Communication Protocol</h2>
+            <p>
+                The Model Context Protocol (MCP) is built on a client-server architecture that facilitates structured
+                communication between AI models and external systems. The power of this architecture stems from the
+                standardisation of its communication protocol and the clear separation of responsibilities among its
+                components.
+            </p>
+            <h3 class="subsection-title">The Core Communication Protocol</h3>
+            <p>
+                MCP defines a standardised communication protocol that enables Clients and Servers to exchange messages
+                consistently and predictably, which is crucial for interoperability across the community.
+            </p>
+            <h4 class="heading-emphasis">JSON-RPC 2.0: The Foundation</h4>
+            <ul>
+                <li>At its core, MCP uses JSON-RPC 2.0 as the message format for all communication between Clients and
+                    Servers.</li>
+                <li>JSON-RPC is a lightweight remote procedure call protocol encoded in JSON.</li>
+                <li>Its key advantages include being human-readable and easy to debug, language-agnostic (supporting
+                    implementation in any programming environment), and well-established with clear specifications and
+                    widespread adoption.</li>
+            </ul>
+        </section>
+
+        <!-- Message Types Section -->
+        <section class="mb-10">
+            <h2 class="section-title">Discuss Message Types</h2>
+            <p>
+                The MCP protocol defines three primary types of messages that flow between Clients and Servers:
+            </p>
+
+            <h3 class="heading-emphasis">1. Requests</h3>
+            <ul>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> Requests are sent from a Client to a
+                    Server to initiate an operation.</li>
+                <li><span class="font-semibold text-orange-300">Components:</span> A Request message includes:
+                    <ul>
+                        <li>A unique identifier (id).</li>
+                        <li>The method name to invoke (e.g., tools/call).</li>
+                        <li>Parameters for the method, if any.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold text-orange-300">Example:</span>
+                    <code>
+                        {"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "weather", "arguments": {"location": "San Francisco"}}}
+                    </code>
+                </li>
+            </ul>
+
+            <h3 class="heading-emphasis">2. Responses</h3>
+            <ul>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> Responses are sent from a Server to a
+                    Client in reply to a Request.</li>
+                <li><span class="font-semibold text-orange-300">Components:</span> A Response message includes:
+                    <ul>
+                        <li>The same id as the corresponding Request.</li>
+                        <li>Either a result (for success) or an error (for failure).</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold text-orange-300">Example Success Response:</span>
+                    <code>
+                        {"jsonrpc": "2.0", "id": 1, "result": {"temperature": 62, "conditions": "Partly cloudy"}}
+                    </code>
+                </li>
+                <li><span class="font-semibold text-orange-300">Example Error Response:</span>
+                    <code>
+                        {"jsonrpc": "2.0", "id": 1, "error": {"code": -32602, "message": "Invalid location parameter"}}
+                    </code>
+                </li>
+            </ul>
+
+            <h3 class="heading-emphasis">3. Notifications</h3>
+            <ul>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> These are one-way messages that do not
+                    require a response. They are typically sent from the Server to the Client to provide updates or
+                    notifications about events.</li>
+                <li><span class="font-semibold text-orange-300">Example:</span>
+                    <code>
+                        {"jsonrpc": "2.0", "method": "progress", "params": {"message": "Processing data...", "percent": 50}}
+                    </code>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Transport Mechanisms Section -->
+        <section class="mb-10">
+            <h2 class="section-title">Discuss Transport Mechanisms</h2>
+            <p>
+                While JSON-RPC defines the message format for MCP communication, the protocol also specifies how these
+                messages are physically transported between Clients and Servers. MCP supports two primary transport
+                mechanisms:
+            </p>
+
+            <h3 class="heading-emphasis">stdio (Standard Input/Output)</h3>
+            <ul>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> This mechanism is used for local
+                    communication, where the Client and Server operate on the same machine.</li>
+                <li><span class="font-semibold text-orange-300">Mechanism:</span> The Host application initiates the
+                    Server as a subprocess and facilitates communication by writing to its standard input (stdin) and
+                    reading from its standard output (stdout).</li>
+                <li><span class="font-semibold text-orange-300">Use Cases:</span> It is typically employed for local
+                    tools, such as accessing file systems or executing local scripts.</li>
+                <li><span class="font-semibold text-orange-300">Advantages:</span> The main benefits of using stdio
+                    include its simplicity, the absence of network configuration requirements, and the fact that it is
+                    securely sandboxed by the operating system.</li>
+            </ul>
+
+            <h3 class="heading-emphasis">HTTP + SSE (Server-Sent Events) / Streamable HTTP</h3>
+            <ul>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> This transport mechanism is designed for
+                    remote communication, where the Client and Server may reside on different machines.</li>
+                <li><span class="font-semibold text-orange-300">Mechanism:</span> Communication occurs over HTTP, with
+                    the Server leveraging Server-Sent Events (SSE) to push updates to the Client over a persistent
+                    connection.</li>
+                <li><span class="font-semibold text-orange-300">Use Cases:</span> It is suitable for connecting to
+                    remote APIs, cloud services, or shared resources.</li>
+                <li><span class="font-semibold text-orange-300">Advantages:</span> Its primary advantages are its
+                    ability to function across networks, enable integration with web services, and ensure compatibility
+                    with serverless environments.</li>
+                <li><span class="font-semibold text-orange-300">Evolution:</span> Recent updates to the MCP standard
+                    have introduced or refined "Streamable HTTP," which provides enhanced flexibility. This allows
+                    servers to dynamically upgrade to SSE for streaming when necessary, while still maintaining
+                    compatibility with serverless environments.</li>
+            </ul>
+        </section>
+
+        <!-- MCP Capabilities Section -->
+        <section class="mb-10">
+            <h2 class="section-title">Discuss MCP Capabilities</h2>
+            <p>
+                MCP Servers expose a variety of capabilities to Clients through the communication protocol. These
+                capabilities are categorised into four main types, each with distinct characteristics and use cases,
+                forming the foundation of MCP's functionality. Understanding these core primitives is essential for
+                effective use of MCP.
+            </p>
+            <p>
+                Here are the four primary types of MCP capabilities:
+            </p>
+
+            <h3 class="heading-emphasis">Tools</h3>
+            <ul>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> Tools are executable functions or
+                    actions that the AI model can invoke via the MCP protocol.</li>
+                <li><span class="font-semibold text-orange-300">Control:</span> They are typically model-controlled,
+                    meaning an AI model (specifically, a Large Language Model or LLM) decides when to call them based on
+                    a user's request and context.</li>
+                <li><span class="font-semibold text-orange-300">Safety:</span> Due to their ability to perform actions
+                    with side effects, tool execution can be dangerous and typically requires explicit user approval.
+                </li>
+                <li><span class="font-semibold text-orange-300">Use Cases:</span> Common use cases include sending
+                    messages, creating tickets, querying APIs, or performing calculations.</li>
+                <li><span class="font-semibold text-orange-300">Example:</span> A weather tool that fetches current
+                    weather data for a given location.</li>
+            </ul>
+
+            <h3 class="heading-emphasis">Resources</h3>
+            <ul>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> Resources provide read-only access to
+                    data sources, allowing the AI model to retrieve context without executing complex logic.</li>
+                <li><span class="font-semibold text-orange-300">Control:</span> They are application-controlled, meaning
+                    the Host application typically decides when to access them.</li>
+                <li><span class="font-semibold text-orange-300">Nature:</span> Resources are designed for data retrieval
+                    with minimal computation, akin to GET endpoints in REST APIs.</li>
+                <li><span class="font-semibold text-orange-300">Safety:</span> Since they are read-only, Resources
+                    generally present lower security risks compared to Tools, and typically do not require explicit user
+                    approval.</li>
+                <li><span class="font-semibold text-orange-300">Use Cases:</span> These include accessing file contents,
+                    retrieving database records, or reading configuration information.</li>
+                <li><span class="font-semibold text-orange-300">Example:</span> A resource that provides access to file
+                    contents at a specified path.</li>
+            </ul>
+
+            <h3 class="heading-emphasis">Prompts</h3>
+            <ul>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> Prompts are predefined templates or
+                    workflows designed to guide the interaction between the user, the AI model, and the Server’s
+                    capabilities.</li>
+                <li><span class="font-semibold text-orange-300">Control:</span> They are user-controlled, often
+                    presented as options within the Host application's user interface.</li>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> Prompts serve to structure interactions
+                    for optimal use of available Tools and Resources.</li>
+                <li><span class="font-semibold text-orange-300">Selection:</span> Users typically select a prompt before
+                    the AI model begins processing, which sets the context for the interaction.</li>
+                <li><span class="font-semibold text-orange-300">Use Cases:</span> Examples include common workflows,
+                    specialised task templates, or guided interactions.</li>
+                <li><span class="font-semibold text-orange-300">Example:</span> A prompt template for generating a code
+                    review, which guides the AI model on how to review code.</li>
+            </ul>
+
+            <h3 class="heading-emphasis">Sampling</h3>
+            <ul>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> Sampling allows Servers to request the
+                    Client (specifically, the Host application) to perform LLM interactions.</li>
+                <li><span class="font-semibold text-orange-300">Control:</span> This capability is server-initiated but
+                    requires facilitation from the Client/Host.</li>
+                <li><span class="font-semibold text-orange-300">Purpose:</span> It enables server-driven agentic
+                    behaviours and potentially recursive or multi-step interactions.</li>
+                <li><span class="font-semibold text-orange-300">Safety:</span> Similar to Tools, sampling operations
+                    typically require user approval.</li>
+                <li><span class="font-semibold text-orange-300">Use Cases:</span> This is used for complex multi-step
+                    tasks, autonomous agent workflows, or interactive processes.</li>
+                <li><span class="font-semibold text-orange-300">Flow:</span> The sampling flow involves the Server
+                    sending a sampling/createMessage request to the Client, which reviews and can modify it, samples
+                    from an LLM, reviews the completion, and then returns the result to the Server. This
+                    human-in-the-loop design ensures users maintain control over what the LLM sees and generates.</li>
+            </ul>
+            <p>
+                These capabilities are designed to work together in complementary ways to enable complex interactions.
+                For instance, a user might select a Prompt to initiate a specialised workflow. This Prompt could then
+                incorporate context retrieved from Resources. During the processing, the AI model might invoke Tools to
+                perform specific actions. For particularly complex operations, the Server might utilise Sampling to
+                request additional LLM processing from the Client. This distinction between primitives provides a clear
+                structure for MCP interactions, allowing AI models to access information, perform actions, and engage in
+                intricate workflows while maintaining appropriate control boundaries.
+            </p>
+            <p>
+                A key feature of MCP is its dynamic capability discovery. When a Client connects to a Server, it can
+                query the available Tools, Resources, and Prompts using specific list methods: tools/list,
+                resources/list, and prompts/list. This mechanism allows Clients to adapt to the specific features each
+                Server offers without needing hardcoded knowledge of the Server’s functionality.
+            </p>
+        </section>
+
+        <!-- New Section: MCP SDK -->
+        <section class="mb-10">
+            <h2 class="section-title">MCP SDK</h2>
+            <p>
+                The Model Context Protocol provides official SDKs for both JavaScript, Python and other languages. This
+                makes it easy to implement MCP clients and servers in your applications. These SDKs handle the low-level
+                protocol details, allowing you to focus on building your application’s capabilities.
+            </p>
+
+            <h3 class="subsection-title">SDK Overview</h3>
+            <p>
+                Both SDKs provide similar core functionality, following the MCP protocol specification we discussed
+                earlier. They handle:
+            </p>
+            <ul>
+                <li>Protocol-level communication</li>
+                <li>Capability registration and discovery</li>
+                <li>Message serialization/deserialization</li>
+                <li>Connection management</li>
+                <li>Error handling</li>
+            </ul>
+
+            <h3 class="subsection-title">Core Primitives Implementation</h3>
+            <p>
+                Let’s explore how to implement each of the core primitives (Tools, Resources, and Prompts) using both
+                SDKs.
+            </p>
+
+            <div class="code-block-container">
+                <div class="code-label">Python</div>
+                <code class="language-python">
+from mcp.server.fastmcp import FastMCP
+
+# Create an MCP server
+mcp = FastMCP("Weather Service")
+
+# Tool implementation
+@mcp.tool()
+def get_weather(location: str) -> str:
+    """Get the current weather for a specified location."""
+    return f"Weather in {location}: Sunny, 72°F"
+
+# Resource implementation
+@mcp.resource("weather://&#123;location&#125;")
+def weather_resource(location: str) -> str:
+    """Provide weather data as a resource."""
+    return f"Weather data for {location}: Sunny, 72°F"
+
+# Prompt implementation
+@mcp.prompt()
+def weather_report(location: str) -> str:
+    """Create a weather report prompt."""
+    return f"""You are a weather reporter. Weather report for {location}?"""
+
+# Run the server
+if __name__ == "__main__":
+    mcp.run()
+                </code>
+            </div>
+            <p>
+                Once you have your server implemented, you can start it by running the server script.
+            </p>
+            <div class="code-block-container">
+                <code class="language-bash">
+mcp dev server.py
+                </code>
+            </div>
+            <p>
+                This will initialize a development server running the file <code>server.py</code>. And log the following
+                output:
+            </p>
+            <div class="code-block-container">
+                <code class="language-bash">
+Starting MCP inspector...
+⚙️ Proxy server listening on port 6277
+Spawned stdio transport
+Connected MCP client to backing server transport
+Created web app transport
+Set up MCP proxy
+🔍 MCP Inspector is up and running at http://127.0.0.1:6274 🚀
+                </code>
+            </div>
+            <p>
+                You can then open the MCP Inspector at <code>http://127.0.0.1:6274</code> to see the server’s
+                capabilities and interact with them. You’ll see the server’s capabilities and the ability to call them
+                via the UI.
+            </p>
+
+            <h3 class="subsection-title">MCP SDKs</h3>
+            <p>
+                MCP is designed to be language-agnostic, and there are official SDKs available for several popular
+                programming languages:
+            </p>
+            <div class="overflow-x-auto mb-4">
+                <table class="min-w-full">
+                    <thead>
+                        <tr>
+                            <th>Language</th>
+                            <th>Repository</th>
+                            <th>Maintainer(s)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TypeScript</td>
+                            <td><a href="https://github.com/modelcontextprotocol/typescript-sdk"
+                                    class="text-blue-400 hover:underline">github.com/modelcontextprotocol/typescript-sdk</a>
+                            </td>
+                            <td>Anthropic</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>Python</td>
+                            <td><a href="https://github.com/modelcontextprotocol/python-sdk"
+                                    class="text-blue-400 hover:underline">github.com/modelcontextprotocol/python-sdk</a>
+                            </td>
+                            <td>Anthropic</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>Java</td>
+                            <td><a href="https://github.com/modelcontextprotocol/java-sdk"
+                                    class="text-blue-400 hover:underline">github.com/modelcontextprotocol/java-sdk</a>
+                            </td>
+                            <td>Spring AI (VMware)</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>Kotlin</td>
+                            <td><a href="https://github.com/modelcontextprotocol/kotlin-sdk"
+                                    class="text-blue-400 hover:underline">github.com/modelcontextprotocol/kotlin-sdk</a>
+                            </td>
+                            <td>JetBrains</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>C#</td>
+                            <td><a href="https://github.com/modelcontextprotocol/csharp-sdk"
+                                    class="text-blue-400 hover:underline">github.com/modelcontextprotocol/csharp-sdk</a>
+                            </td>
+                            <td>Microsoft</td>
+                            <td>Active (Preview)</td>
+                        </tr>
+                        <tr>
+                            <td>Swift</td>
+                            <td><a href="https://github.com/modelcontextprotocol/swift-sdk"
+                                    class="text-blue-400 hover:underline">github.com/modelcontextprotocol/swift-sdk</a>
+                            </td>
+                            <td>loopwork-ai</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>Rust</td>
+                            <td><a href="https://github.com/modelcontextprotocol/rust-sdk"
+                                    class="text-blue-400 hover:underline">github.com/modelcontextprotocol/rust-sdk</a>
+                            </td>
+                            <td>Anthropic/Community</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>Dart</td>
+                            <td><a href="https://github.com/leehack/mcp_dart"
+                                    class="text-blue-400 hover:underline">https://github.com/leehack/mcp_dart</a></td>
+                            <td>Flutter Community</td>
+                            <td>Active</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>
+                These SDKs provide language-specific abstractions that simplify working with the MCP protocol, allowing
+                you to focus on implementing the core logic of your servers or clients rather than dealing with
+                low-level protocol details.
+            </p>
+        </section>
+
+    </div>
+</body>
+
+</html>
