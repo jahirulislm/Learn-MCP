@@ -1,0 +1,13 @@
+name: Llama.cpp model
+version: 0.0.1
+schema: v1
+models:
+  - provider: llama.cpp
+    model: unsloth/Devstral-Small-2505-GGUF
+    apiBase: http://localhost:8080
+    defaultCompletionOptions:
+      contextLength: 8192 # Adjust based on the model
+    name: Llama.cpp Devstral-Small
+    roles:
+      - chat
+      - edit
